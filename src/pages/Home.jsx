@@ -1,5 +1,6 @@
 import { useContext, useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import axios from 'axios';
 
 import Categories from '../components/Categories';
 import Sort from '../components/Sort';
@@ -8,14 +9,18 @@ import Skeleton from '../components/PizzaBlock/Skeleton';
 import Pagination from '../components/Pagination';
 import { SearchContext } from '../App';
 
+import { setCurrentPage } from '../store/filtersSlice';
+
 const Home = () => {
+  const dispatch = useDispatch();
   const { searchValue } = useContext(SearchContext);
 
   const activeCategoryId = useSelector((state) => state.filters.activeCategoryId);
   const sortOptions = useSelector((state) => state.filters.sort);
+  const currentPage = useSelector((state) => state.filters.currentPage);
+
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [currentPage, setCurrentPage] = useState(1);
 
   useEffect(() => {
     const { property, order } = sortOptions;
@@ -24,12 +29,12 @@ const Home = () => {
     const category = activeCategoryId > 0 ? `&category=${activeCategoryId}` : '';
 
     setLoading(true);
-    fetch(
-      `https://64c92e89b2980cec85c20458.mockapi.io/items?${page}&sortBy=${property}&order=${order}${search}${category}`,
-    )
-      .then((res) => res.json())
-      .then((data) => {
-        setItems(data);
+    axios
+      .get(
+        `https://64c92e89b2980cec85c20458.mockapi.io/items?${page}&sortBy=${property}&order=${order}${search}${category}`,
+      )
+      .then((res) => {
+        setItems(res.data);
         setLoading(false);
       });
 
@@ -48,7 +53,7 @@ const Home = () => {
           ? [...new Array(6)].map((_, idx) => <Skeleton key={idx} />)
           : items.map((pizza) => <PizzaBlock key={pizza.id} {...pizza} />)}
       </div>
-      <Pagination onPageChange={setCurrentPage} />
+      <Pagination onPageChange={(page) => dispatch(setCurrentPage(page))} />
     </div>
   );
 };
