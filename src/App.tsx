@@ -8,7 +8,7 @@ import Cart from './pages/Cart';
 import PizzaDetails from './pages/PizzaDetails';
 import MainLayout from './layouts/MainLayout';
 
-function App() {
+const App: React.FC = () => {
   return (
     <Routes>
       <Route path="/" element={<MainLayout />}>

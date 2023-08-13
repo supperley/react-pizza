@@ -6,7 +6,7 @@ import { selectCart } from '../store/slices/cartSlice';
 import Search from './Search';
 import logo from '../assets/img/pizza-logo.svg';
 
-const Header = () => {
+const Header:React.FC = () => {
   const { totalCount, totalPrice } = useSelector(selectCart);
 
   return (

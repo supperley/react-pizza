@@ -11,7 +11,7 @@ import Pagination from '../components/Pagination';
 import { initialState, selectSort, setFilters } from '../store/slices/filtersSlice';
 import { fetchPizzas } from '../store/slices/pizzasSlice';
 
-const Home = () => {
+const Home: React.FC = () => {
   const dispatch = useDispatch();
   const location = useLocation();
   const [searchParams, setSearchParams] = useSearchParams();
@@ -19,10 +19,10 @@ const Home = () => {
   const isSearchRef = useRef(false);
 
   const sortOptions = useSelector(selectSort);
-  const searchValue = useSelector((state) => state.filters.searchValue);
-  const { items, status } = useSelector((state) => state.pizzas);
-  const activeCategoryId = useSelector((state) => state.filters.activeCategoryId);
-  const currentPage = useSelector((state) => state.filters.currentPage);
+  const searchValue = useSelector((state: any) => state.filters.searchValue);
+  const { items, status } = useSelector((state: any) => state.pizzas);
+  const activeCategoryId = useSelector((state: any) => state.filters.activeCategoryId);
+  const currentPage = useSelector((state: any) => state.filters.currentPage);
 
   const getPizzas = () => {
     const { property, order } = sortOptions;
@@ -30,6 +30,7 @@ const Home = () => {
     const search = searchValue.trim().length > 0 ? `&search=${searchValue.trim()}` : '';
     const category = activeCategoryId > 0 ? `&category=${activeCategoryId}` : '';
 
+    // @ts-ignore
     dispatch(fetchPizzas({ page, property, order, search, category }));
 
     window.scrollTo(0, 0);
@@ -42,7 +43,7 @@ const Home = () => {
         categoryId: activeCategoryId,
         sortBy: sortOptions.property,
         order: sortOptions.order,
-        page: currentPage,
+        page: currentPage
       });
     }
 
@@ -61,7 +62,7 @@ const Home = () => {
       const filters = {
         activeCategoryId: Number(activeCategoryId),
         currentPage: Number(currentPage),
-        sort: { property, order },
+        sort: { property, order }
       };
 
       dispatch(setFilters(filters));
@@ -81,24 +82,24 @@ const Home = () => {
   }, [activeCategoryId, sortOptions, searchValue, currentPage]);
 
   return (
-    <div className="container">
-      <div className="content__top">
+    <div className='container'>
+      <div className='content__top'>
         <Categories activeCategoryId={activeCategoryId} />
         <Sort />
       </div>
-      <h2 className="content__title">Все пиццы</h2>
+      <h2 className='content__title'>Все пиццы</h2>
       {status === 'error' ? (
-        <div className="content__error-info">
+        <div className='content__error-info'>
           <h2>
             Произошла ошибка <span>😕</span>
           </h2>
           <p>К сожалению, не удалось загрузить пиццы. Попробуйте повторить попытку позже.</p>
         </div>
       ) : (
-        <div className="content__items">
+        <div className='content__items'>
           {status === 'loading'
             ? [...new Array(6)].map((_, idx) => <Skeleton key={idx} />)
-            : items.map((pizza) => <PizzaBlock key={pizza.id} {...pizza} />)}
+            : items.map((pizza: any) => <PizzaBlock key={pizza.id} {...pizza} />)}
         </div>
       )}
       <Pagination currentPage={currentPage} />

@@ -1,12 +1,16 @@
 import axios from 'axios';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import Spinner from '../components/Spinner';
 
-const PizzaDetails = () => {
+const PizzaDetails: React.FC = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const [pizza, setPizza] = useState();
+  const [pizza, setPizza] = useState<{
+    title: string;
+    price: number;
+    imageUrl: string;
+  }>();
 
   useEffect(() => {
     const fetchPizza = async () => {
