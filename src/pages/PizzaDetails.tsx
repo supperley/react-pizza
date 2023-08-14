@@ -1,44 +1,48 @@
+import React, { useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import axios from 'axios';
-import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import Spinner from '../components/Spinner';
 
-const PizzaDetails: React.FC = () => {
-  const { id } = useParams();
-  const navigate = useNavigate();
-  const [pizza, setPizza] = useState<{
+const FullPizza: React.FC = () => {
+  const [pizza, setPizza] = React.useState<{
+    imageUrl: string;
     title: string;
     price: number;
-    imageUrl: string;
   }>();
 
+  const { id } = useParams();
+  const navigate = useNavigate();
+
   useEffect(() => {
-    const fetchPizza = async () => {
+    async function fetchPizza() {
       try {
         const { data } = await axios.get('https://64c92e89b2980cec85c20458.mockapi.io/items/' + id);
         setPizza(data);
       } catch (error) {
-        alert('К сожалению, пицца не была найдена.');
+        alert('Ошибка при получении пиццы!');
         navigate('/');
       }
-    };
+    }
 
     fetchPizza();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   if (!pizza) {
-    return <Spinner />;
+    return <>Загрузка...</>;
   }
 
-  // TODO: write pleasant styles for PizzaDetails component
   return (
     <div className="container">
-      <img src={pizza.imageUrl} alt={pizza.title} />
+      <img src={pizza.imageUrl} alt="pizza" />
       <h2>{pizza.title}</h2>
-      <h2>{pizza.price} ₴</h2>
+      <h4>{pizza.price} ₽</h4>
+      <Link to="/">
+        <button className="button button--outline button--add">
+          <span>Назад</span>
+        </button>
+      </Link>
     </div>
   );
 };
 
-export default PizzaDetails;
+export default FullPizza;

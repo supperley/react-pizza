@@ -8,10 +8,13 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 20px;
 
-    @media (max-width: 560px) {
+    @media (max-width: 645px) {
       flex-direction: column;
+
+      .header__cart {
+        margin-top: 20px;
+      }
     }
   }
 
@@ -33,9 +36,5 @@
     p {
       color: #7b7b7b;
     }
-  }
-
-  &__cart {
-    flex-shrink: 0;
   }
 }
